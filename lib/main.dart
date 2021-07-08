@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
             future: AuthService().getCurrentUser(),
             builder: (context, AsyncSnapshot<dynamic> snapshot) {
               if (snapshot.hasData)
-                return ChatRooms();
+                return ChatRoomScreen();
               else
                 return SignupScreen();
             }));

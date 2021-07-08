@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class ChatRoomScreen extends StatelessWidget {
-  const ChatRoomScreen({Key? key}) : super(key: key);
+class ChatsScreen extends StatelessWidget {
+  const ChatsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Rooms"),
+        title: Text("ChatsScreen"),
       ),
     );
   }

@@ -7,4 +7,11 @@ class DatabaseHelper {
         .doc(userId)
         .set(user);
   }
+
+  Future<Stream<QuerySnapshot>> getUserByUsername(String username) async {
+    return FirebaseFirestore.instance
+        .collection("Users")
+        .where("username", isEqualTo: username)
+        .snapshots();
+  }
 }

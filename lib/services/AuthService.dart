@@ -46,8 +46,8 @@ class AuthService {
         "imageURL": user.photoURL
       };
       DatabaseHelper().saveUser(user.uid, userMap).then((value) => {
-            Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (context) => ChatRooms()))
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => ChatRoomScreen()))
           });
     }
   }
