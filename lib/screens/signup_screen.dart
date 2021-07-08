@@ -1,3 +1,4 @@
+import 'package:fl_notes/services/AuthService.dart';
 import 'package:flutter/material.dart';
 
 class SignupScreen extends StatelessWidget {
@@ -8,7 +9,9 @@ class SignupScreen extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: ElevatedButton.icon(
-          onPressed: () {},
+          onPressed: () {
+            AuthService().signIn(context);
+          },
           icon: Icon(Icons.login),
           label: Text("SIgnup With Google"),
         ),
