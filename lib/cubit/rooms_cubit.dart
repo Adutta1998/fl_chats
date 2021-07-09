@@ -8,14 +8,9 @@ part 'rooms_state.dart';
 class RoomsCubit extends Cubit<RoomsState> {
   RoomsCubit() : super(RoomsInitial());
 
-  void getUsers(String username) async {
-    emit(RoomsLoading());
+  void getRooms() {
     DatabaseHelper()
-        .getUserByUsername(username)
+        .getChatRooms()
         .then((value) => emit(RoomsLoaded(stream: value)));
-  }
-
-  void initial() {
-    emit(RoomsInitial());
   }
 }

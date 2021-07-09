@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fl_notes/cubit/rooms_cubit.dart';
+import 'package:fl_notes/cubit/search_cubit.dart';
 import 'package:fl_notes/screens/chat_screen.dart';
-import 'package:fl_notes/screens/signup_screen.dart';
-import 'package:fl_notes/services/AuthService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,28 +13,13 @@ class SearchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => RoomsCubit(),
+      create: (context) => SearchCubit(),
       child: Scaffold(
         appBar: AppBar(
-          title: Text("rooms"),
-          actions: [
-            InkWell(
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                child: Icon(Icons.logout),
-              ),
-              onTap: () {
-                AuthService().signOut().then((value) => {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => SignupScreen()),
-                      )
-                    });
-              },
-            )
-          ],
+          title: Text("Search"),
+          actions: [],
         ),
-        body: BlocBuilder<RoomsCubit, RoomsState>(
+        body: BlocBuilder<SearchCubit, SearchState>(
           builder: (context, state) {
             return Column(
               children: [
@@ -50,14 +33,14 @@ class SearchScreen extends StatelessWidget {
     );
   }
 
-  Widget _searchBar(BuildContext context, RoomsState state) {
+  Widget _searchBar(BuildContext context, SearchState state) {
     return Container(
       color: Colors.blue[100],
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: Row(
           children: [
-            ((state is RoomsLoading) || (state is RoomsLoaded))
+            ((state is SearchLoading) || (state is SearchLoaded))
                 ? InkWell(
                     child: Padding(
                       padding: const EdgeInsets.only(right: 16.0),
@@ -65,7 +48,7 @@ class SearchScreen extends StatelessWidget {
                     ),
                     onTap: () {
                       usernameController.text = "";
-                      BlocProvider.of<RoomsCubit>(context).initial();
+                      BlocProvider.of<SearchCubit>(context).initial();
                     },
                   )
                 : Container(),
@@ -80,7 +63,7 @@ class SearchScreen extends StatelessWidget {
               child: Icon(Icons.search_sharp),
               onTap: () {
                 if (usernameController.text.length > 0) {
-                  BlocProvider.of<RoomsCubit>(context)
+                  BlocProvider.of<SearchCubit>(context)
                       .getUsers(usernameController.text);
                 }
               },
@@ -91,11 +74,11 @@ class SearchScreen extends StatelessWidget {
     );
   }
 
-  _userList(BuildContext context, RoomsState state) {
-    if (state is RoomsLoading) {
+  _userList(BuildContext context, SearchState state) {
+    if (state is SearchLoading) {
       return CircularProgressIndicator();
     }
-    if (state is RoomsLoaded) {
+    if (state is SearchLoaded) {
       return StreamBuilder(
           stream: state.stream,
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -117,15 +100,19 @@ class SearchScreen extends StatelessWidget {
   Widget _userTile(DocumentSnapshot<Object?> ds, BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => ChatsScreen()));
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ChatsScreen(
+                      ds: ds.data() as Map,
+                    )));
       },
       child: Container(
-        height: 64.0,
+        height: 72.0,
         decoration: BoxDecoration(
             color: Colors.grey[300],
             border: Border(bottom: BorderSide(color: Colors.black26))),
-        padding: EdgeInsets.symmetric(horizontal: 8.0),
+        padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
         child: Row(
           children: [
             ClipRRect(

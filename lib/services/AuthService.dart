@@ -32,12 +32,16 @@ class AuthService {
 
     // ignore: unnecessary_null_comparison
     if (userCredential != null) {
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      pref.clear();
       SharedPreferencesHelper().saveUserId(user.uid);
-      SharedPreferencesHelper().saveUserDisplayName(user.displayName!);
-      SharedPreferencesHelper().saveUserEmail(user.email!);
-      SharedPreferencesHelper().saveUserProfilePictureUrl(user.photoURL!);
       SharedPreferencesHelper()
-          .saveUserName(user.email!.replaceAll("@gmail.com", ""));
+          .saveUserDisplayName(user.displayName!.toString());
+      SharedPreferencesHelper().saveUserEmail(user.email!.toString());
+      SharedPreferencesHelper()
+          .saveUserProfilePictureUrl(user.photoURL!.toString());
+      SharedPreferencesHelper()
+          .saveUserName(user.email!.replaceAll("@gmail.com", "").toString());
 
       Map<String, dynamic> userMap = {
         "email": user.email,
